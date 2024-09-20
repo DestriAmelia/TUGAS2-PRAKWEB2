@@ -1,26 +1,27 @@
 <?php
 
-include 'Database.php'; // Melakukan include pada file Database.php jika ditemukan
+// melakukan perintah 'include; pada file Database.php untuk membaca data
+include 'Database.php'; 
 
 class PenggantiPengawasUjian extends Database {
-    // Fungsi untuk membaca data pengganti pengawas ujian
+// method 'read' untuk membaca data pengganti pengawas ujian
     public function readPenggantiPengawas() {
         $sql = "SELECT * FROM pengganti_pengawas_ujian";
         $result = $this->conn->query($sql);
         
-        // Cek apakah query berhasil
+// mengecek query jika berhasil
         if ($result === false) {
             return [];
         }
-
-        return $result->fetch_all(MYSQLI_ASSOC); // Kembalikan hasil dalam bentuk array asosiatif
+// mengembalikan hasil dalam bentuk array asosiatif
+        return $result->fetch_all(MYSQLI_ASSOC); 
     }
 
-    // Fungsi untuk membuat data pengganti pengawas ujian
+// method 'create' untuk membuat data pengganti pengawas ujian
     public function createPenggantiPengawas($data) {
         $stmt = $this->conn->prepare("INSERT INTO pengganti_pengawas_ujian (nama_pengawas_diganti, unit_kerja, hari_tgl_penggantian, jam, ruang, nama_pengawas_pengganti, dosen_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
         
-        // Binding parameter untuk query
+// menambahkan 'Binding parameter' untuk query
         $stmt->bind_param('ssssssi', 
             $data['nama_pengawas_diganti'], 
             $data['unit_kerja'], 
@@ -30,8 +31,8 @@ class PenggantiPengawasUjian extends Database {
             $data['nama_pengawas_pengganti'], 
             $data['dosen_id']
         );
-        
-        return $stmt->execute(); // Eksekusi query dan kembalikan hasil
+   // menjalankan query dan mengembalikan hasil data     
+        return $stmt->execute(); 
     }
 }
 ?>
