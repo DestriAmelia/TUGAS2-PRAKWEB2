@@ -1,27 +1,28 @@
-
 <?php
 
-include 'Database.php'; // Melakukan include pada file Database.php jika ditemukan
+// menggunakan perintah 'include' pada file Database.php untuk membaca data
+include 'Database.php'; 
 
+// membuat kelas turunan
 class LaporanKerjaLembur extends Database {
-    // Fungsi untuk membaca data pengganti pengawas ujian
+// Fungsi untuk membaca data pengganti pengawas ujian
     public function readLaporanLembur() {
         $sql = "SELECT * FROM laporan_kerja_lembur";
         $result = $this->conn->query($sql);
         
-        // Cek apakah query berhasil
+// mengecek query jika berhasil
         if ($result === false) {
             return [];
         }
-
-        return $result->fetch_all(MYSQLI_ASSOC); // Kembalikan hasil dalam bentuk array asosiatif
+// mengembalikan hasil dalam bentuk array asosiatif
+        return $result->fetch_all(MYSQLI_ASSOC); 
     }
 
-    // Fungsi untuk membuat data pengganti pengawas ujian
+// method 'createLaporanLembur' untuk membuat data pengganti pengawas ujian
     public function createLaporanLembur($data) {
         $stmt = $this->conn->prepare("INSERT INTO laporan_kerja_lembur (hari_tgl_laporan, waktu, uraian_pekerjaan, keterangan, dosen_id) VALUES (?, ?, ?, ?, ?)");
         
-        // Binding parameter untuk query
+// menggunakan 'binding parameter' untuk query
         $stmt->bind_param('ssssssi', 
         $data['hari_tgl_laporan'], 
         $data['waktu'], 
@@ -29,7 +30,8 @@ class LaporanKerjaLembur extends Database {
         $data['keterangan'], 
         $data['dosen_id']);
         
-        return $stmt->execute(); // Eksekusi query dan kembalikan hasil
+ // mengeksekusi query dan mengembalikan hasil data    
+        return $stmt->execute(); 
     }
 }
 ?>
