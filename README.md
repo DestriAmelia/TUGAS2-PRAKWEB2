@@ -34,7 +34,7 @@
    );
 ``` 
 
-3. *Mengaktifkan server:*
+2. *Mengaktifkan server:*
    Aktifkan server (contohnys : XAMPP, Laragon).
 
 ## *Overview*
@@ -49,8 +49,6 @@ Repositori ini bertujuan untuk mengimplementasi data sederhana dalam PHP dengan 
 
 ### **1. File Database.php**
 File 'Database.php' bertugas untuk membuat koneksi ke database MySQL menggunakan mysqli. Kelas ini menyediakan koneksi yang akan digunakan oleh kelas turunan.
-
-<?php
 
   // membuat kelas Database untuk koneksi
 
@@ -80,6 +78,7 @@ class yang ada di Database
 ```sh
     $this->conn = mysqli_connect($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
 ```
+
     // untuk menampilkan pesan jika koneksi tidak tejadi
 
 ```sh
@@ -99,36 +98,40 @@ class yang ada di Database
 ### **2. File PenggantiPengawasUjian.php**
 File ini mendefinisikan kelas PenggantiPengawasUjian, yang merupakan turunan dari kelas Database. Kelas ini memiliki dua fungsi utama: readPenggantiPengawas() untuk membaca data dan createPenggantiPengawas() untuk menambah data.
 
-
-<?php
-
-// Melakukan 'include' pada file Database.php
+// menggunakan perintah 'include' untuk mengimpor file eksternal ke dalam kode file 'PenggantipengawasUjian.php' dan mengevaluasinya di tempat file 'Database.php'.
+```sh
 include 'Database.php'; 
-
-penggantian pengawasan ujian <?php
-
-// melakukan perintah 'include; pada file Database.php untuk membaca data
-include 'Database.php'; 
-
+```
+// membuat kelas PenggantiPengawasUjian yang diwarisi dari kelas Database
+```sh
 class PenggantiPengawasUjian extends Database {
+```
 // method 'read' untuk membaca data pengganti pengawas ujian
+```sh
     public function readPenggantiPengawas() {
         $sql = "SELECT * FROM pengganti_pengawas_ujian";
         $result = $this->conn->query($sql);
-        
+ ```
+       
 // mengecek query jika berhasil
+```sh
         if ($result === false) {
             return [];
         }
+```
+
 // mengembalikan hasil dalam bentuk array asosiatif
+```sh
         return $result->fetch_all(MYSQLI_ASSOC); 
     }
-
+```
 // method 'create' untuk membuat data pengganti pengawas ujian
+```sh
     public function createPenggantiPengawas($data) {
         $stmt = $this->conn->prepare("INSERT INTO pengganti_pengawas_ujian (nama_pengawas_diganti, unit_kerja, hari_tgl_penggantian, jam, ruang, nama_pengawas_pengganti, dosen_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        
+ ```       
 // menambahkan 'Binding parameter' untuk query
+```sh
         $stmt->bind_param('ssssssi', 
             $data['nama_pengawas_diganti'], 
             $data['unit_kerja'], 
@@ -138,12 +141,13 @@ class PenggantiPengawasUjian extends Database {
             $data['nama_pengawas_pengganti'], 
             $data['dosen_id']
         );
-   // menjalankan query dan mengembalikan hasil data     
+```
+   // menjalankan query dan mengembalikan hasil data  
+```sh
         return $stmt->execute(); 
     }
 }
-?>
-
+```
 
 #### *Penjelasan:*
 - *PenggantiPengawasUjian*: Merupakan kelas anak jadi kelas ini dapat mewarisi kelas Database sehingga dapat mengakses properti $conn.
@@ -155,9 +159,7 @@ class PenggantiPengawasUjian extends Database {
 ### **3. File LaporanKerjaLembur.php**
 Sama dengan PenggantiPengawasUjian.php, file ini mendefinisikan kelas LaporanKerjaLembur untuk operasi CRUD pada tabel laporan_lembur.
 
- <?php
-
-// menggunakan perintah 'include' pada file Database.php untuk membaca data
+// menggunakan perintah 'include' untuk mengimpor file eksternal ke dalam kode file 'LaporanKerjaLembur.php' dan mengevaluasinya di tempat file 'Database.php'.
 
 ```sh
 include 'Database.php'; 
@@ -217,30 +219,165 @@ class LaporanKerjaLembur extends Database {
 
 
 #### *Penjelasan:*
-- Kelas *LaporanKerjaLembur* juga merupakan turunan dari kelas Database.
-- *readLaporanLembur()* dan *createLaporanLembur()* bekerja mirip dengan metode pada kelas PenggantiPengawasUjian, tetapi diterapkan pada tabel laporan_kerja_lembur.
+- Kelas *LaporanKerjaLembur* juga sama dengan kelas PenggantiPengawasUjian yang merupakan turunan dari kelas Database.
+- *readLaporanLembur()* dan *createLaporanLembur()* merupakan metode untuk membaca dan membuat yang bekerja mirip dengan metode pada kelas PenggantiPengawasUjian, tetapi dalam kelas LaporanKerjaLembur diterapkan pada tabel laporan_kerja_lembur.
 
-### **4. File test.php**
-File ini digunakan untuk menguji koneksi database sederhana.
+### **4. File index.php*
+Untuk membuat tampilan DASHBOARD
+```sh
+index <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pengganti Pengawas & Laporan Lembur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="pengganti_pengawas.php">Pengganti Pengawas Ujian</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="laporan_lembur.php">Laporan Kerja Lembur</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-php
-<?php
-include 'Database.php';
+    <div class="container mt-4">
+        <h1 class="text-center" style="color:red;font-family:verdana;"> Ola! <br> Welcome to My Dashboard Tugas 2</h1>
+        <p class="text-center" style="font:message-box">Navigasikan di atas terdapat menu pengganti pengawas ujian dan laporan kerja lembur <br> jika kalian klik maka akan kalian akan melihat data yang ada di dalamnya.</p>
+    </div>
 
-$db = new Database();
-echo "Koneksi berhasil!";
-?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```
+### **Output Index.php**
 
 
-#### *Penjelasan:*
-- Menggunakan file ini, Anda dapat memastikan bahwa koneksi ke database berjalan dengan baik.
-- Jika koneksi berhasil, pesan "Koneksi berhasil!" akan muncul.
+### **5. File pengganti-pengawas.php**
+File ini ntuk membuat tampilan dan tabel pada PenggantiPengawasUjian
 
----
+// menggunakan perintah 'include' untuk mengimpor file eksternal ke dalam kode file 'pengganti-pengawas.php' dan mengevaluasinya di tempat file 'PenggantiPengawasUjian.php'.
+```sh
+include 'PenggantiPengawasUjian.php';
 
-## *Catatan*
-- Pastikan server MySQL Anda sudah berjalan, dan database serta tabel sudah sesuai dengan yang dibutuhkan.
-- Struktur dasar ini dapat dikembangkan lebih lanjut dengan menambahkan operasi Update dan Delete.
+$pengganti = new PenggantiPengawasUjian();
+$dataPengganti = $pengganti->readPenggantiPengawas();
+```
+// membuat tampilan dan tabel pada PenggantiPengawasUjian
+```sh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengganti Pengawas Ujian</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 style="font-family:courier;color:pink;" ><center>Pengganti Pengawas Ujian<center></h1>
+        <table class="table table-bordered table-striped">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Pengawas Diganti</th>
+                    <th>Unit Kerja</th>
+                    <th>Hari/Tanggal Penggantian</th>
+                    <th>Jam</th>
+                    <th>Ruang</th>
+                    <th>Nama Pengawas Pengganti</th>
+                    <th>Dosen ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($dataPengganti as $pengganti): ?>
+                    <tr>
+                        <td><?= $pengganti['pengganti_id'] ?></td>
+                        <td><?= $pengganti['nama_pengawas_diganti'] ?></td>
+                        <td><?= $pengganti['unit_kerja'] ?></td>
+                        <td><?= $pengganti['hari_tgl_penggantian'] ?></td>
+                        <td><?= $pengganti['jam'] ?></td>
+                        <td><?= $pengganti['ruang'] ?></td>
+                        <td><?= $pengganti['nama_pengawas_pengganti'] ?></td>
+                        <td><?= $pengganti['dosen_id'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
----
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```
+### **Output pengganti-pengawas.php**
+
+
+### **6. File laporan-lembur.php**
+File ini untuk membuat tampilan dan tabel pada LaporanKerjaLembur
+
+// menggunakan perintah 'include' untuk mengimpor file eksternal ke dalam kode file 'laporan-lempur.php' dan mengevaluasinya di tempat file 'LaporanKerjaLembur.php'.
+```sh
+include 'LaporanKerjaLembur.php';
+
+$laporan = new LaporanKerjaLembur();
+$dataLaporan = $laporan->readLaporanLembur();
+```
+// untuk membuat tampilan dan tabel pada LaporanKerjaLembur
+```sh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Kerja Lembur</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 style="color:pink;font-family:courier;"><center>Laporan Kerja Lembur</center></h1>
+        <table class="table table-bordered table-striped">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID</th>
+                    <th>Hari/Tanggal Laporan</th>
+                    <th>Waktu</th>
+                    <th>Uraian Pekerjaan</th>
+                    <th>Keterangan</th>
+                    <th>Dosen ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($dataLaporan as $laporan): ?>
+                    <tr>
+                        <td><?= $laporan['lembur_id'] ?></td>
+                        <td><?= $laporan['hari_tgl_laporan'] ?></td>
+                        <td><?= $laporan['waktu'] ?></td>
+                        <td><?= $laporan['uraian_pekerjaan'] ?></td>
+                        <td><?= $laporan['keterangan'] ?></td>
+                        <td><?= $laporan['dosen_id'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div
+```
+#### *Output laporan-lembur.php*
+
+
 
