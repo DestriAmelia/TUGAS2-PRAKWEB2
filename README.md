@@ -2,8 +2,6 @@
 
 # *Pengganti Pengawas Ujian dan Laporan Kerja Lembur*
 
-## *Penggunaan*
-
 ### *Tutorial langkah-langkah membuat Database di MySQL:*
 
 1. *Membuat Database:*
@@ -222,7 +220,7 @@ class LaporanKerjaLembur extends Database {
 - Kelas *LaporanKerjaLembur* juga sama dengan kelas PenggantiPengawasUjian yang merupakan turunan dari kelas Database.
 - *readLaporanLembur()* dan *createLaporanLembur()* merupakan metode untuk membaca dan membuat yang bekerja mirip dengan metode pada kelas PenggantiPengawasUjian, tetapi dalam kelas LaporanKerjaLembur diterapkan pada tabel laporan_kerja_lembur.
 
-### **4. File index.php*
+### *4. File index.php*
 Untuk membuat tampilan DASHBOARD
 ```sh
 index <!DOCTYPE html>
@@ -264,6 +262,7 @@ index <!DOCTYPE html>
 </html>
 ```
 ### **Output Index.php**
+<img width="957" alt="dashboard" src="https://github.com/user-attachments/assets/f187db7c-dc51-4a9d-8f6a-58013a07bb61">
 
 
 ### **5. File pengganti-pengawas.php**
@@ -325,6 +324,7 @@ $dataPengganti = $pengganti->readPenggantiPengawas();
 </html>
 ```
 ### **Output pengganti-pengawas.php**
+<img width="949" alt="penggantipengawas" src="https://github.com/user-attachments/assets/7f61ba92-2700-4945-a431-dbbfa1a4ebc3">
 
 
 ### **6. File laporan-lembur.php**
@@ -379,5 +379,6 @@ $dataLaporan = $laporan->readLaporanLembur();
 ```
 #### *Output laporan-lembur.php*
 
+<img width="959" alt="kerja lembur" src="https://github.com/user-attachments/assets/342d71af-2a50-41f6-b7a4-b06f8a795f6a">
 
 
