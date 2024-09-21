@@ -9,6 +9,7 @@
 1. *Membuat Database:*
    buatlah database dengan nama bebas (contoh : tugas_2) dan buat dua tabel yang sesuai:
 
+```sh
    sql
    CREATE TABLE pengganti_pengawas_ujian (
        pengganti_id INT NOT NULL AUTO_INCREMENT,
@@ -31,11 +32,10 @@
        dosen_id INT NOT NULL,
        PRIMARY KEY (lembur_id)
    );
-   
+``` 
 
-2. *Mengaktifkan server:*
+3. *Mengaktifkan server:*
    Aktifkan server (contohnys : XAMPP, Laragon).
----
 
 ## *Overview*
 Repositori ini bertujuan untuk mengimplementasi data sederhana dalam PHP dengan Object-Oriented Programming (OOP) yang berinteraksi dengan database MySQL. Studi kasus yang digunakan adalah *Pengganti Pengawas Ujian* dan *Laporan Kerja Lembur sesuai dengan perintah pada tugas. Kode ini menggunakan konsep dasar OOP seperti **enkapsulasi, **inheretance, dan **polimorfisme, serta menyinggung sedikit mengenai operasi dasar **Create, Read, Update, Delete* (CRUD).
@@ -44,8 +44,6 @@ Repositori ini bertujuan untuk mengimplementasi data sederhana dalam PHP dengan 
 1. *Database.php*: Merupakan kelas untuk mengelola koneksi Database MySQL yang didalamnya terdapat atribut dan metode.
 2. *PenggantiPengawasUjian.php*: Sebuah elas untuk menambahkan CRUD OOP terkait tabel pengganti_pengawas_ujian.
 3. *LaporanKerjaLembur.php*: Sebuah kelas untuk menambahkan CRUD OOP terkait tabel laporan_kerja_lembur.
-
----
 
 ## *Penjabaran dari code yang telah dibuat*
 
