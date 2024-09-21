@@ -52,55 +52,85 @@ Repositori ini bertujuan untuk mengimplementasi data sederhana dalam PHP dengan 
 ### **1. File Database.php**
 File 'Database.php' bertugas untuk membuat koneksi ke database MySQL menggunakan mysqli. Kelas ini menyediakan koneksi yang akan digunakan oleh kelas turunan.
 
-php
 <?php
-class Database {
-    protected $conn;  // Properti koneksi yang diakses oleh kelas turunan
 
-    public function __construct() {
-        // Koneksi ke database
-        $this->conn = new mysqli('localhost', 'root', '', 'tugas_2');
+  // membuat kelas Database untuk koneksi
 
-        // Cek jika terjadi error koneksi
-        if ($this->conn->connect_error) {
-            die("Koneksi ke database gagal: " . $this->conn->connect_error);
-        }
-    }
+```sh
+  class Database { 
+```
+
+  // membuat properti 'privat' tujuannya agar hanya dapat diakses oleh 
+
+```sh
+class yang ada di Database
+  private $db_host = "localhost";
+  private $db_user = "root";  // username database
+  private $db_pass = "";  // password database
+  private $db_name = "tugas_2";  // nama database
+  protected $conn; // untuk menyiapkan koneksi dengan database
+```
+  // method untuk melakukan koneksi kedatabase dengan fungsi 'contsruct'
+  
+```sh 
+  public function __construct() 
+  {
+```
+  
+  // inisialisasi koneksi objek intansi dari kelas Database
+
+```sh
+    $this->conn = mysqli_connect($this->db_host, $this->db_user, $this->db_pass, $this->db_name);
+```
+    // untuk menampilkan pesan jika koneksi tidak tejadi
+
+```sh
+     if(!$this->conn) { 
+      
+      echo "Gagal terhubung";
+    }
+  }
 }
-?>
-
+```
 
 #### *Penjelasan:*
-- *$conn*: Variabel yang menyimpan koneksi database.
-- *__construct()*: Metode konstruktor yang dijalankan ketika kelas diinisialisasi, untuk membangun koneksi ke MySQL.
-- Jika terjadi error koneksi, sistem akan menampilkan pesan error dan menghentikan eksekusi.
+- *$conn*: merupakan variabel untuk menyimpan koneksi database.
+- *__construct()*: merupakan sebuah fungsi atau metode 'konstruktor' yang dijalankan ketika kelas diinisialisasi, untuk membangun koneksi ke MySQL.
+- Apabila codingan mengalami error koneksi, sistem akan menampilkan pesan error dan menghentikan eksekusi.
 
 ### **2. File PenggantiPengawasUjian.php**
 File ini mendefinisikan kelas PenggantiPengawasUjian, yang merupakan turunan dari kelas Database. Kelas ini memiliki dua fungsi utama: readPenggantiPengawas() untuk membaca data dan createPenggantiPengawas() untuk menambah data.
 
-php
+
 <?php
-include 'Database.php'; // Melakukan include pada file Database.php jika ditemukan
+
+// Melakukan 'include' pada file Database.php
+include 'Database.php'; 
+
+penggantian pengawasan ujian <?php
+
+// melakukan perintah 'include; pada file Database.php untuk membaca data
+include 'Database.php'; 
 
 class PenggantiPengawasUjian extends Database {
-    // Fungsi untuk membaca data pengganti pengawas ujian
+// method 'read' untuk membaca data pengganti pengawas ujian
     public function readPenggantiPengawas() {
         $sql = "SELECT * FROM pengganti_pengawas_ujian";
         $result = $this->conn->query($sql);
-
-        // Cek apakah query berhasil
+        
+// mengecek query jika berhasil
         if ($result === false) {
             return [];
         }
-
-        return $result->fetch_all(MYSQLI_ASSOC); // Kembalikan hasil dalam bentuk array asosiatif
+// mengembalikan hasil dalam bentuk array asosiatif
+        return $result->fetch_all(MYSQLI_ASSOC); 
     }
 
-    // Fungsi untuk membuat data pengganti pengawas ujian
+// method 'create' untuk membuat data pengganti pengawas ujian
     public function createPenggantiPengawas($data) {
         $stmt = $this->conn->prepare("INSERT INTO pengganti_pengawas_ujian (nama_pengawas_diganti, unit_kerja, hari_tgl_penggantian, jam, ruang, nama_pengawas_pengganti, dosen_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
         
-        // Binding parameter untuk query
+// menambahkan 'Binding parameter' untuk query
         $stmt->bind_param('ssssssi', 
             $data['nama_pengawas_diganti'], 
             $data['unit_kerja'], 
@@ -110,58 +140,82 @@ class PenggantiPengawasUjian extends Database {
             $data['nama_pengawas_pengganti'], 
             $data['dosen_id']
         );
-        
-        return $stmt->execute(); // Eksekusi query dan kembalikan hasil
-    }
+   // menjalankan query dan mengembalikan hasil data     
+        return $stmt->execute(); 
+    }
 }
 ?>
 
 
 #### *Penjelasan:*
-- *PenggantiPengawasUjian*: Kelas ini mewarisi kelas Database sehingga dapat mengakses properti $conn.
+- *PenggantiPengawasUjian*: Merupakan kelas anak jadi kelas ini dapat mewarisi kelas Database sehingga dapat mengakses properti $conn.
   
-- *readPenggantiPengawas()*: Fungsi ini membaca data dari tabel pengganti_pengawas_ujian menggunakan query SQL SELECT *. Hasilnya diambil dalam bentuk array asosiatif dengan fetch_all(MYSQLI_ASSOC).
+- *readPenggantiPengawas()*: Metode atau fungsi ini membaca data dari tabel pengganti_pengawas menggunakan query SQL SELECT * FROM. Hasilnya diambil dalam bentuk array asosiatif dengan fetch_all(MYSQLI_ASSOC).
 
-- *createPenggantiPengawas()*: Fungsi ini menambah data ke tabel pengganti_pengawas_ujian menggunakan prepared statement. Parameter dimasukkan melalui bind_param() untuk menghindari SQL injection.
+- *createPenggantiPengawas()*: Metode atau fungsi ini menambah data ke tabel pengganti_pengawas_ujian menggunakan prepared statement. Parameter dimasukkan melalui bind_param() untuk menghindari SQL injection.
 
 ### **3. File LaporanKerjaLembur.php**
-Mirip dengan PenggantiPengawasUjian.php, file ini mendefinisikan kelas LaporanKerjaLembur untuk operasi CRUD pada tabel laporan_kerja_lembur.
+Sama dengan PenggantiPengawasUjian.php, file ini mendefinisikan kelas LaporanKerjaLembur untuk operasi CRUD pada tabel laporan_lembur.
 
-php
-<?php
-include 'Database.php'; // Melakukan include pada file Database.php jika ditemukan
+ <?php
 
+// menggunakan perintah 'include' pada file Database.php untuk membaca data
+
+```sh
+include 'Database.php'; 
+```
+
+// membuat kelas turunan
+
+```sh
 class LaporanKerjaLembur extends Database {
-    // Fungsi untuk membaca laporan kerja lembur
+// Fungsi untuk membaca data pengganti pengawas ujian
     public function readLaporanLembur() {
         $sql = "SELECT * FROM laporan_kerja_lembur";
         $result = $this->conn->query($sql);
+```
 
-        // Cek apakah query berhasil
+// mengecek query jika berhasil
+
+```sh
         if ($result === false) {
             return [];
         }
+```
 
-        return $result->fetch_all(MYSQLI_ASSOC);
+// mengembalikan hasil dalam bentuk array asosiatif
+
+```sh
+        return $result->fetch_all(MYSQLI_ASSOC); 
     }
+```
 
-    // Fungsi untuk membuat laporan kerja lembur
+// method 'createLaporanLembur' untuk membuat data pengganti pengawas ujian
+
+```sh
     public function createLaporanLembur($data) {
         $stmt = $this->conn->prepare("INSERT INTO laporan_kerja_lembur (hari_tgl_laporan, waktu, uraian_pekerjaan, keterangan, dosen_id) VALUES (?, ?, ?, ?, ?)");
-        
-        // Binding parameter untuk query
-        $stmt->bind_param('ssssi', 
-            $data['hari_tgl_laporan'], 
-            $data['waktu'], 
-            $data['uraian_pekerjaan'], 
-            $data['keterangan'], 
-            $data['dosen_id']
-        );
-        
-        return $stmt->execute();
-    }
+```
+
+// menggunakan 'binding parameter' untuk query
+
+```sh
+        $stmt->bind_param('ssssssi', 
+        $data['hari_tgl_laporan'], 
+        $data['waktu'], 
+        $data['uraian_pekerjaan'], 
+        $data['keterangan'], 
+        $data['dosen_id']);
+```
+
+ // mengeksekusi query dan mengembalikan hasil data
+
+ ```sh
+        return $stmt->execute(); 
+    }
 }
 ?>
+```
 
 
 #### *Penjelasan:*
